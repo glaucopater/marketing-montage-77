@@ -188,6 +188,10 @@ const Index: React.FC = () => {
           width: Math.round(placement.width),
           height: Math.round(placement.height)
         },
+        scale: {
+          widthScale: parseFloat((placement.width / placement.initialWidth).toFixed(2)),
+          heightScale: parseFloat((placement.height / placement.initialHeight).toFixed(2))
+        },
         zIndex: placement.zIndex
       };
     })
