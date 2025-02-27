@@ -1,0 +1,6 @@
+
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M40 40H110V110C110 120 100 130 90 130H60C50 130 40 120 40 110V40Z" fill="#9b87f5"/>
+  <path d="M45 45H105V110C105 117.5 97.5 125 90 125H60C52.5 125 45 117.5 45 110V45Z" fill="#D6BCFA" fill-opacity="0.5"/>
+  <path d="M110 60H130C135 60 140 65 140 70V80C140 85 135 90 130 90H110V60Z" fill="#7E69AB"/>
+</svg>

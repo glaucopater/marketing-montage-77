@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 246 80% 60%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,4 +92,58 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.draggable-product {
+  cursor: grab;
+  position: absolute;
+  transform-origin: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.draggable-product:active {
+  cursor: grabbing;
+}
+
+.draggable-product:hover .resize-handle {
+  opacity: 1;
+}
+
+.resize-handle {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 2px solid #9b87f5;
+  border-radius: 50%;
+  cursor: se-resize;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.canvas-container {
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #fff;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+.product-list-container {
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.product-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
