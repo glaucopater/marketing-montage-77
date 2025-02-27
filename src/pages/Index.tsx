@@ -167,6 +167,32 @@ const Index: React.FC = () => {
     }
   };
 
+  // Create composition data object for JSON display
+  const compositionData = {
+    canvas: {
+      id: selectedCanvas.id,
+      name: selectedCanvas.name,
+      category: selectedCanvas.category
+    },
+    products: placedProducts.map(placement => {
+      const product = products.find(p => p.id === placement.productId);
+      return {
+        id: placement.id,
+        productId: placement.productId,
+        productName: product?.name || "Unknown Product",
+        position: {
+          x: Math.round(placement.x),
+          y: Math.round(placement.y)
+        },
+        dimensions: {
+          width: Math.round(placement.width),
+          height: Math.round(placement.height)
+        },
+        zIndex: placement.zIndex
+      };
+    })
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
@@ -214,6 +240,16 @@ const Index: React.FC = () => {
                   >
                     {isDownloading ? "Processing..." : "Download Composition"}
                   </Button>
+                </div>
+              </div>
+              
+              {/* New Information Box for JSON data */}
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Composition Data</h2>
+                <div className="bg-gray-50 p-4 rounded border border-gray-200 overflow-x-auto">
+                  <pre className="text-xs text-gray-700 whitespace-pre-wrap">
+                    {JSON.stringify(compositionData, null, 2)}
+                  </pre>
                 </div>
               </div>
               
