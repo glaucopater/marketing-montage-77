@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Canvas as CanvasType, PlacedProduct, Product } from "../utils/types";
 import { generateId, getElementSize, isPositionWithinBounds } from "../utils/helpers";
+import { products } from "../utils/data";
 
 interface CanvasProps {
   canvas: CanvasType;
@@ -170,7 +171,7 @@ const Canvas: React.FC<CanvasProps> = ({
           onDoubleClick={() => handleDoubleClick(placement.id)}
         >
           <img
-            src={placement.productId.replace('product-', '') + '.svg'}
+            src={products.find(p => p.id === placement.productId)?.image}
             alt="Product"
             className="w-full h-full object-contain"
             style={{ opacity: 0.75 }}
