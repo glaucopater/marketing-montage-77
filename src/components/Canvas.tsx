@@ -170,7 +170,7 @@ const Canvas: React.FC<CanvasProps> = ({
           onDoubleClick={() => handleDoubleClick(placement.id)}
         >
           <img
-            src={`${placement.productId.replace('product-', '')}.svg`}
+            src={placement.productId.replace('product-', '') + '.svg'}
             alt="Product"
             className="w-full h-full object-contain"
             style={{ opacity: 0.75 }}
