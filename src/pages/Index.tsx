@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductList from "@/components/ProductList";
 import Canvas from "@/components/Canvas";
+import SelectedProductsList from "@/components/SelectedProductsList";
 import { 
   canvases, 
   products 
@@ -255,6 +256,15 @@ const Index: React.FC = () => {
                 </div>
               </div>
               
+              {/* Selected Products List */}
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Selected Products</h2>
+                <SelectedProductsList 
+                  placedProducts={placedProducts}
+                  onRemoveProduct={handleProductRemove}
+                />
+              </div>
+              
               {/* New Information Box for JSON data */}
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Composition Data</h2>
@@ -298,7 +308,7 @@ const Index: React.FC = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">8</span>
-                    Double-click on a product to remove it from the canvas.
+                    Remove products using the "Selected Products" list below the canvas.
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">9</span>

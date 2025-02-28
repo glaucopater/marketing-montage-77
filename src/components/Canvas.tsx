@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Canvas as CanvasType, PlacedProduct, Product } from "../utils/types";
 import { generateId, getElementSize, isPositionWithinBounds } from "../utils/helpers";
@@ -20,9 +19,6 @@ const Canvas: React.FC<CanvasProps> = ({
   const canvasRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   
-  // Log each render to see what's happening
-  console.log("Canvas rendering, placedProducts:", placedProducts);
-
   // Update canvas size on mount and window resize
   useEffect(() => {
     const updateCanvasSize = () => {
@@ -154,8 +150,6 @@ const Canvas: React.FC<CanvasProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    console.log("Z-axis rotation started for product:", placementId);
-    
     const productElement = document.getElementById(`product-${placementId}`);
     if (!productElement) return;
     
@@ -178,8 +172,6 @@ const Canvas: React.FC<CanvasProps> = ({
       
       // Apply rotation (keeping it within 0-360 range)
       const newRotation = (startRotation + angleDiff + 360) % 360;
-      
-      console.log("Z-axis rotating to:", newRotation);
       
       onProductPlacementChange({
         ...placement,
@@ -204,8 +196,6 @@ const Canvas: React.FC<CanvasProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    console.log("X-axis rotation started for product:", placementId);
-    
     const productElement = document.getElementById(`product-${placementId}`);
     if (!productElement) return;
     
@@ -221,8 +211,6 @@ const Canvas: React.FC<CanvasProps> = ({
       const dy = moveEvent.clientY - startY;
       // Adjust the rotation sensitivity
       const newRotationX = (startRotationX - dy * 0.5 + 360) % 360;
-      
-      console.log("X-axis rotating to:", newRotationX);
       
       onProductPlacementChange({
         ...placement,
@@ -247,8 +235,6 @@ const Canvas: React.FC<CanvasProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    console.log("Y-axis rotation started for product:", placementId);
-    
     const productElement = document.getElementById(`product-${placementId}`);
     if (!productElement) return;
     
@@ -265,8 +251,6 @@ const Canvas: React.FC<CanvasProps> = ({
       // Adjust the rotation sensitivity
       const newRotationY = (startRotationY + dx * 0.5 + 360) % 360;
       
-      console.log("Y-axis rotating to:", newRotationY);
-      
       onProductPlacementChange({
         ...placement,
         rotationY: newRotationY,
@@ -282,11 +266,6 @@ const Canvas: React.FC<CanvasProps> = ({
     document.addEventListener("mouseup", handleMouseUp);
   }, [placedProducts, onProductPlacementChange]);
 
-  // Handle double click to remove product
-  const handleDoubleClick = useCallback((placementId: string) => {
-    onProductRemove(placementId);
-  }, [onProductRemove]);
-
   return (
     <div 
       ref={canvasRef}
@@ -295,7 +274,6 @@ const Canvas: React.FC<CanvasProps> = ({
       style={{ backgroundImage: `url(${canvas.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
       {placedProducts.map((placement) => {
-        console.log("Rendering product:", placement.id, "with rotation:", placement.rotation);
         const rotationX = placement.rotationX || 0;
         const rotationY = placement.rotationY || 0;
         return (
@@ -314,7 +292,6 @@ const Canvas: React.FC<CanvasProps> = ({
               perspective: '800px',
             }}
             onMouseDown={(e) => handleDragStart(e, placement.id)}
-            onDoubleClick={() => handleDoubleClick(placement.id)}
           >
             <img
               src={products.find(p => p.id === placement.productId)?.image}
@@ -327,25 +304,22 @@ const Canvas: React.FC<CanvasProps> = ({
               className="resize-handle"
               onMouseDown={(e) => handleResize(e, placement.id)}
             />
-            {/* Z-axis rotation handle (original) */}
+            {/* Z-axis rotation handle */}
             <div 
               className="rotate-handle"
               onMouseDown={(e) => handleRotate(e, placement.id)}
-              style={{ backgroundColor: '#ef4444' }} 
               title="Rotate Z-axis"
             />
-            {/* X-axis rotation handle (new) */}
+            {/* X-axis rotation handle */}
             <div 
               className="rotate-x-handle"
               onMouseDown={(e) => handleRotateX(e, placement.id)}
-              style={{ backgroundColor: '#22c55e' }}
               title="Rotate X-axis"
             />
-            {/* Y-axis rotation handle (new) */}
+            {/* Y-axis rotation handle */}
             <div 
               className="rotate-y-handle"
               onMouseDown={(e) => handleRotateY(e, placement.id)}
-              style={{ backgroundColor: '#3b82f6' }}
               title="Rotate Y-axis"
             />
           </div>
