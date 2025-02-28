@@ -146,7 +146,7 @@ const Canvas: React.FC<CanvasProps> = ({
     document.addEventListener("mouseup", handleMouseUp);
   }, [placedProducts, canvasSize, onProductPlacementChange]);
 
-  // Handle rotation
+  // Handle Z rotation (2D plane rotation)
   const handleRotate = useCallback((
     e: React.MouseEvent,
     placementId: string
@@ -154,7 +154,7 @@ const Canvas: React.FC<CanvasProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    console.log("Rotation started for product:", placementId);
+    console.log("Z-axis rotation started for product:", placementId);
     
     const productElement = document.getElementById(`product-${placementId}`);
     if (!productElement) return;
@@ -179,11 +179,97 @@ const Canvas: React.FC<CanvasProps> = ({
       // Apply rotation (keeping it within 0-360 range)
       const newRotation = (startRotation + angleDiff + 360) % 360;
       
-      console.log("Rotating to:", newRotation);
+      console.log("Z-axis rotating to:", newRotation);
       
       onProductPlacementChange({
         ...placement,
         rotation: newRotation,
+      });
+    };
+    
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+    
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  }, [placedProducts, onProductPlacementChange]);
+
+  // Handle X rotation (3D rotation around X axis)
+  const handleRotateX = useCallback((
+    e: React.MouseEvent,
+    placementId: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log("X-axis rotation started for product:", placementId);
+    
+    const productElement = document.getElementById(`product-${placementId}`);
+    if (!productElement) return;
+    
+    const placement = placedProducts.find(p => p.id === placementId);
+    if (!placement) return;
+    
+    const startY = e.clientY;
+    const startRotationX = placement.rotationX || 0;
+    
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      moveEvent.preventDefault();
+      
+      const dy = moveEvent.clientY - startY;
+      // Adjust the rotation sensitivity
+      const newRotationX = (startRotationX - dy * 0.5 + 360) % 360;
+      
+      console.log("X-axis rotating to:", newRotationX);
+      
+      onProductPlacementChange({
+        ...placement,
+        rotationX: newRotationX,
+      });
+    };
+    
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+    
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  }, [placedProducts, onProductPlacementChange]);
+
+  // Handle Y rotation (3D rotation around Y axis)
+  const handleRotateY = useCallback((
+    e: React.MouseEvent,
+    placementId: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log("Y-axis rotation started for product:", placementId);
+    
+    const productElement = document.getElementById(`product-${placementId}`);
+    if (!productElement) return;
+    
+    const placement = placedProducts.find(p => p.id === placementId);
+    if (!placement) return;
+    
+    const startX = e.clientX;
+    const startRotationY = placement.rotationY || 0;
+    
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      moveEvent.preventDefault();
+      
+      const dx = moveEvent.clientX - startX;
+      // Adjust the rotation sensitivity
+      const newRotationY = (startRotationY + dx * 0.5 + 360) % 360;
+      
+      console.log("Y-axis rotating to:", newRotationY);
+      
+      onProductPlacementChange({
+        ...placement,
+        rotationY: newRotationY,
       });
     };
     
@@ -210,6 +296,8 @@ const Canvas: React.FC<CanvasProps> = ({
     >
       {placedProducts.map((placement) => {
         console.log("Rendering product:", placement.id, "with rotation:", placement.rotation);
+        const rotationX = placement.rotationX || 0;
+        const rotationY = placement.rotationY || 0;
         return (
           <div
             id={`product-${placement.id}`}
@@ -221,7 +309,9 @@ const Canvas: React.FC<CanvasProps> = ({
               width: `${placement.width}px`,
               height: `${placement.height}px`,
               zIndex: placement.zIndex,
-              transform: `rotate(${placement.rotation || 0}deg)`,
+              transform: `rotate(${placement.rotation || 0}deg) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
+              transformStyle: 'preserve-3d',
+              perspective: '800px',
             }}
             onMouseDown={(e) => handleDragStart(e, placement.id)}
             onDoubleClick={() => handleDoubleClick(placement.id)}
@@ -237,11 +327,26 @@ const Canvas: React.FC<CanvasProps> = ({
               className="resize-handle"
               onMouseDown={(e) => handleResize(e, placement.id)}
             />
-            {/* Make sure this element is rendered and visible */}
+            {/* Z-axis rotation handle (original) */}
             <div 
               className="rotate-handle"
               onMouseDown={(e) => handleRotate(e, placement.id)}
-              style={{ backgroundColor: '#ef4444' }} // Ensure color is applied
+              style={{ backgroundColor: '#ef4444' }} 
+              title="Rotate Z-axis"
+            />
+            {/* X-axis rotation handle (new) */}
+            <div 
+              className="rotate-x-handle"
+              onMouseDown={(e) => handleRotateX(e, placement.id)}
+              style={{ backgroundColor: '#22c55e' }}
+              title="Rotate X-axis"
+            />
+            {/* Y-axis rotation handle (new) */}
+            <div 
+              className="rotate-y-handle"
+              onMouseDown={(e) => handleRotateY(e, placement.id)}
+              style={{ backgroundColor: '#3b82f6' }}
+              title="Rotate Y-axis"
             />
           </div>
         );

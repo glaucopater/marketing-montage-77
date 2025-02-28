@@ -106,7 +106,9 @@
 }
 
 .draggable-product:hover .resize-handle,
-.draggable-product:hover .rotate-handle {
+.draggable-product:hover .rotate-handle,
+.draggable-product:hover .rotate-x-handle,
+.draggable-product:hover .rotate-y-handle {
   opacity: 1;
 }
 
@@ -132,6 +134,36 @@
   width: 20px !important;
   height: 20px !important;
   background-color: #ef4444 !important;
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+  z-index: 10 !important;
+}
+
+.rotate-x-handle {
+  position: absolute !important;
+  left: -8px !important;
+  top: -8px !important;
+  width: 20px !important;
+  height: 20px !important;
+  background-color: #22c55e !important; /* Green color for X-axis */
+  border: 2px solid white !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+  z-index: 10 !important;
+}
+
+.rotate-y-handle {
+  position: absolute !important;
+  left: -8px !important;
+  bottom: -8px !important;
+  width: 20px !important;
+  height: 20px !important;
+  background-color: #3b82f6 !important; /* Blue color for Y-axis */
   border: 2px solid white !important;
   border-radius: 50% !important;
   cursor: pointer !important;

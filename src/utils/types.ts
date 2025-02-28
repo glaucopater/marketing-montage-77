@@ -25,7 +25,9 @@ export interface PlacedProduct {
   initialWidth: number;
   initialHeight: number;
   zIndex: number;
-  rotation: number; // Add rotation property (in degrees)
+  rotation: number; // 2D rotation (in degrees)
+  rotationX: number; // 3D rotation on X axis (in degrees)
+  rotationY: number; // 3D rotation on Y axis (in degrees)
 }
 
 export interface Composition {

@@ -90,6 +90,8 @@ const Index: React.FC = () => {
       initialHeight: defaultWidth * aspectRatio,
       zIndex: placedProducts.length + 1,
       rotation: 0, // Initial rotation is 0 degrees
+      rotationX: 0, // Initial X rotation is 0 degrees
+      rotationY: 0, // Initial Y rotation is 0 degrees
     };
 
     setPlacedProducts([...placedProducts, newPlacement]);
@@ -193,7 +195,11 @@ const Index: React.FC = () => {
           widthScale: parseFloat((placement.width / placement.initialWidth).toFixed(2)),
           heightScale: parseFloat((placement.height / placement.initialHeight).toFixed(2))
         },
-        rotation: Math.round(placement.rotation || 0),
+        rotation: {
+          z: Math.round(placement.rotation || 0),
+          x: Math.round(placement.rotationX || 0),
+          y: Math.round(placement.rotationY || 0)
+        },
         zIndex: placement.zIndex
       };
     })
@@ -276,18 +282,26 @@ const Index: React.FC = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">4</span>
-                    Use the resize handle (bottom-right corner) to resize products.
+                    Use the bottom-right blue handle to resize products.
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">5</span>
-                    Use the rotation handle (top-right corner) to rotate products.
+                    Use the top-right red handle to rotate on Z-axis (2D).
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">6</span>
-                    Double-click on a product to remove it from the canvas.
+                    Use the top-left green handle to rotate on X-axis (3D).
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">7</span>
+                    Use the bottom-left blue handle to rotate on Y-axis (3D).
+                  </li>
+                  <li className="flex items-start">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">8</span>
+                    Double-click on a product to remove it from the canvas.
+                  </li>
+                  <li className="flex items-start">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">9</span>
                     Click "Download Composition" when you're satisfied with your design.
                   </li>
                 </ul>
