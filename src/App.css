@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +40,33 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Styles for the product handles */
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.rotate-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'><path d='M23 4v6h-6M1 20v-6h6'></path><path d='M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15'></path></svg>") 16 16, auto;
+}
+
+.draggable-product {
+  position: absolute;
+  cursor: move;
+  user-select: none;
 }

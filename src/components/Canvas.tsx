@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Canvas as CanvasType, PlacedProduct, Product } from "../utils/types";
 import { generateId, getElementSize, isPositionWithinBounds } from "../utils/helpers";
@@ -143,6 +142,52 @@ const Canvas: React.FC<CanvasProps> = ({
     document.addEventListener("mouseup", handleMouseUp);
   }, [placedProducts, canvasSize, onProductPlacementChange]);
 
+  // Handle rotation
+  const handleRotate = useCallback((
+    e: React.MouseEvent,
+    placementId: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const productElement = document.getElementById(`product-${placementId}`);
+    if (!productElement) return;
+    
+    const placement = placedProducts.find(p => p.id === placementId);
+    if (!placement) return;
+    
+    const rect = productElement.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Get starting angle
+    const startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
+    const startRotation = placement.rotation || 0;
+    
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      moveEvent.preventDefault();
+      
+      const currentAngle = Math.atan2(moveEvent.clientY - centerY, moveEvent.clientX - centerX) * 180 / Math.PI;
+      const angleDiff = currentAngle - startAngle;
+      
+      // Apply rotation (keeping it within 0-360 range)
+      const newRotation = (startRotation + angleDiff + 360) % 360;
+      
+      onProductPlacementChange({
+        ...placement,
+        rotation: newRotation,
+      });
+    };
+    
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+    
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  }, [placedProducts, onProductPlacementChange]);
+
   // Handle double click to remove product
   const handleDoubleClick = useCallback((placementId: string) => {
     onProductRemove(placementId);
@@ -166,6 +211,7 @@ const Canvas: React.FC<CanvasProps> = ({
             width: `${placement.width}px`,
             height: `${placement.height}px`,
             zIndex: placement.zIndex,
+            transform: `rotate(${placement.rotation || 0}deg)`,
           }}
           onMouseDown={(e) => handleDragStart(e, placement.id)}
           onDoubleClick={() => handleDoubleClick(placement.id)}
@@ -180,6 +226,10 @@ const Canvas: React.FC<CanvasProps> = ({
           <div 
             className="resize-handle"
             onMouseDown={(e) => handleResize(e, placement.id)}
+          />
+          <div 
+            className="rotate-handle"
+            onMouseDown={(e) => handleRotate(e, placement.id)}
           />
         </div>
       ))}
