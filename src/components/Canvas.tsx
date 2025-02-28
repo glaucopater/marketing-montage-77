@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Canvas as CanvasType, PlacedProduct, Product } from "../utils/types";
 import { generateId, getElementSize, isPositionWithinBounds } from "../utils/helpers";
@@ -18,6 +19,9 @@ const Canvas: React.FC<CanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  
+  // Log each render to see what's happening
+  console.log("Canvas rendering, placedProducts:", placedProducts);
 
   // Update canvas size on mount and window resize
   useEffect(() => {
@@ -150,6 +154,8 @@ const Canvas: React.FC<CanvasProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
+    console.log("Rotation started for product:", placementId);
+    
     const productElement = document.getElementById(`product-${placementId}`);
     if (!productElement) return;
     
@@ -172,6 +178,8 @@ const Canvas: React.FC<CanvasProps> = ({
       
       // Apply rotation (keeping it within 0-360 range)
       const newRotation = (startRotation + angleDiff + 360) % 360;
+      
+      console.log("Rotating to:", newRotation);
       
       onProductPlacementChange({
         ...placement,
@@ -200,39 +208,44 @@ const Canvas: React.FC<CanvasProps> = ({
       className="canvas-container border border-gray-200 rounded-lg shadow-md relative"
       style={{ backgroundImage: `url(${canvas.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      {placedProducts.map((placement) => (
-        <div
-          id={`product-${placement.id}`}
-          key={placement.id}
-          className="draggable-product"
-          style={{
-            left: `${placement.x}px`,
-            top: `${placement.y}px`,
-            width: `${placement.width}px`,
-            height: `${placement.height}px`,
-            zIndex: placement.zIndex,
-            transform: `rotate(${placement.rotation || 0}deg)`,
-          }}
-          onMouseDown={(e) => handleDragStart(e, placement.id)}
-          onDoubleClick={() => handleDoubleClick(placement.id)}
-        >
-          <img
-            src={products.find(p => p.id === placement.productId)?.image}
-            alt="Product"
-            className="w-full h-full object-contain"
-            style={{ opacity: 0.75 }}
-            draggable={false}
-          />
-          <div 
-            className="resize-handle"
-            onMouseDown={(e) => handleResize(e, placement.id)}
-          />
-          <div 
-            className="rotate-handle"
-            onMouseDown={(e) => handleRotate(e, placement.id)}
-          />
-        </div>
-      ))}
+      {placedProducts.map((placement) => {
+        console.log("Rendering product:", placement.id, "with rotation:", placement.rotation);
+        return (
+          <div
+            id={`product-${placement.id}`}
+            key={placement.id}
+            className="draggable-product"
+            style={{
+              left: `${placement.x}px`,
+              top: `${placement.y}px`,
+              width: `${placement.width}px`,
+              height: `${placement.height}px`,
+              zIndex: placement.zIndex,
+              transform: `rotate(${placement.rotation || 0}deg)`,
+            }}
+            onMouseDown={(e) => handleDragStart(e, placement.id)}
+            onDoubleClick={() => handleDoubleClick(placement.id)}
+          >
+            <img
+              src={products.find(p => p.id === placement.productId)?.image}
+              alt="Product"
+              className="w-full h-full object-contain"
+              style={{ opacity: 0.75 }}
+              draggable={false}
+            />
+            <div 
+              className="resize-handle"
+              onMouseDown={(e) => handleResize(e, placement.id)}
+            />
+            {/* Make sure this element is rendered and visible */}
+            <div 
+              className="rotate-handle"
+              onMouseDown={(e) => handleRotate(e, placement.id)}
+              style={{ backgroundColor: '#ef4444' }} // Ensure color is applied
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };
