@@ -1,4 +1,3 @@
-
 import { Canvas, Product } from "./types";
 
 // Mock canvas backgrounds
@@ -13,7 +12,7 @@ export const canvases: Canvas[] = [
   {
     id: "canvas-2",
     name: "Kitchen Counter",
-    image: "https://images.unsplash.com/photo-1556911220-bda9f7f6b548?auto=format&fit=crop&q=80&w=1000",
+    image: "https://images.unsplash.com/photo-1486718448742-163732cd1544?auto=format&fit=crop&q=80&w=1000",
     description: "A clean modern kitchen counter",
     category: "interior"
   },
