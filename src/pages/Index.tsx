@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
@@ -38,7 +37,6 @@ const Index: React.FC = () => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Update canvas size when component mounts
   useEffect(() => {
     const canvasContainer = document.getElementById("canvas-container");
     if (canvasContainer) {
@@ -49,13 +47,11 @@ const Index: React.FC = () => {
     }
   }, [selectedCanvas]);
 
-  // Handle canvas change
   const handleCanvasChange = (canvasId: string) => {
     const canvas = canvases.find((c) => c.id === canvasId);
     if (canvas) {
       setSelectedCanvas(canvas);
       
-      // Reset placed products when canvas changes
       setPlacedProducts([]);
       
       toast({
@@ -65,7 +61,6 @@ const Index: React.FC = () => {
     }
   };
 
-  // Handle adding a product to the canvas
   const handleProductSelect = useCallback((product: Product) => {
     if (placedProducts.length >= 3) {
       toast({
@@ -76,10 +71,9 @@ const Index: React.FC = () => {
       return;
     }
 
-    // Create a new placement with default position and size
     const defaultWidth = 100;
-    const aspectRatio = 1; // Most SVG products have 1:1 aspect ratio
-    
+    const aspectRatio = 1;
+
     const newPlacement: PlacedProduct = {
       id: generateId(),
       productId: product.id,
@@ -90,9 +84,9 @@ const Index: React.FC = () => {
       initialWidth: defaultWidth,
       initialHeight: defaultWidth * aspectRatio,
       zIndex: placedProducts.length + 1,
-      rotation: 0, // Initial rotation is 0 degrees
-      rotationX: 0, // Initial X rotation is 0 degrees
-      rotationY: 0, // Initial Y rotation is 0 degrees
+      rotation: 0,
+      rotationX: 0,
+      rotationY: 0,
     };
 
     setPlacedProducts([...placedProducts, newPlacement]);
@@ -103,14 +97,12 @@ const Index: React.FC = () => {
     });
   }, [placedProducts, canvasSize, toast]);
 
-  // Handle product placement updates
   const handleProductPlacementChange = useCallback((updatedPlacement: PlacedProduct) => {
     setPlacedProducts((prev) =>
       prev.map((p) => (p.id === updatedPlacement.id ? updatedPlacement : p))
     );
   }, []);
 
-  // Handle product removal
   const handleProductRemove = useCallback((placementId: string) => {
     setPlacedProducts((prev) => prev.filter((p) => p.id !== placementId));
     
@@ -120,7 +112,6 @@ const Index: React.FC = () => {
     });
   }, [toast]);
 
-  // Handle composition download
   const handleDownload = async () => {
     if (placedProducts.length === 0) {
       toast({
@@ -134,19 +125,15 @@ const Index: React.FC = () => {
     try {
       setIsDownloading(true);
       
-      // Get the canvas element
       const canvasElement = document.getElementById("canvas-container");
       if (!canvasElement) {
         throw new Error("Canvas element not found");
       }
 
-      // Capture the canvas as an image
       const dataUrl = await captureCanvas(canvasElement);
       
-      // Download the image
       downloadImage(dataUrl, `marketing-montage-${new Date().getTime()}.png`);
       
-      // Save the composition metadata
       const composition: Composition = {
         id: generateId(),
         canvasId: selectedCanvas.id,
@@ -171,7 +158,6 @@ const Index: React.FC = () => {
     }
   };
 
-  // Create composition data object for JSON display
   const compositionData = {
     canvas: {
       id: selectedCanvas.id,
@@ -256,7 +242,6 @@ const Index: React.FC = () => {
                 </div>
               </div>
               
-              {/* Selected Products List */}
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Selected Products</h2>
                 <SelectedProductsList 
@@ -265,7 +250,6 @@ const Index: React.FC = () => {
                 />
               </div>
               
-              {/* New Information Box for JSON data */}
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Composition Data</h2>
                 <div className="bg-gray-50 p-4 rounded border border-gray-200 overflow-x-auto">
@@ -288,7 +272,7 @@ const Index: React.FC = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">3</span>
-                    Drag products to position them on the canvas.
+                    Drag products to position them on the canvas (touch and drag on mobile).
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">4</span>
@@ -313,6 +297,12 @@ const Index: React.FC = () => {
                   <li className="flex items-start">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">9</span>
                     Click "Download Composition" when you're satisfied with your design.
+                  </li>
+                  <li className="flex items-start mt-4 p-2 bg-indigo-50 rounded-lg">
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-medium mr-2">📱</span>
+                    <span className="text-indigo-800">
+                      <strong>Mobile users:</strong> Tap and drag to move products. Tap handles to resize or rotate. All handles appear when you touch a product.
+                    </span>
                   </li>
                 </ul>
               </div>

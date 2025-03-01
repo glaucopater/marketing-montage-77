@@ -45,6 +45,9 @@ const SelectedProductsList: React.FC<SelectedProductsListProps> = ({
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {product.name}
                 </p>
+                <div className="text-xs text-gray-500">
+                  {Math.round(placement.rotation || 0)}° rotation
+                </div>
               </div>
             </div>
             <Button
